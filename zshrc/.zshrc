@@ -1,14 +1,42 @@
-# Path to your oh-my-zsh installation.
-# Reevaluate the prompt string each time it's displaying a prompt
+# Shell formatting
 setopt prompt_subst
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 autoload bashcompinit && bashcompinit
 autoload -Uz compinit
 compinit
-source <(kubectl completion zsh)
-complete -C '/usr/local/bin/aws_completer' aws
 
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Path to your Oh My Zsh installation
+export ZSH="$HOME/.oh-my-zsh"
+
+# Oh My Zsh plugins
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+
+# Environment settings
+export LANG=en_US.UTF-8
+export EDITOR=/opt/homebrew/bin/nvim
+export VIMRUNTIME="/opt/homebrew/share/nvim/runtime"
+export XDG_CONFIG_HOME="/Users/veronelazio/.config"
+
+# Nushell configuration
+export NUSHELL_CONFIG_DIR="$XDG_CONFIG_HOME/nushell"
+mkdir -p ~/.cache/starship
+mkdir -p ~/.cache/carapace
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+
+# History configuration
+HISTFILE=$HOME/.zhistory
+SAVEHIST=1000
+HISTSIZE=999
+setopt share_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_verify
+
+# Key bindings
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
 bindkey '^w' autosuggest-execute
 bindkey '^e' autosuggest-accept
 bindkey '^u' autosuggest-toggle
@@ -16,18 +44,20 @@ bindkey '^L' vi-forward-word
 bindkey '^k' up-line-or-search
 bindkey '^j' down-line-or-search
 
-eval "$(starship init zsh)"
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
+# Directory aliases
+alias dev="cd ~/Developer"
+alias exp="cd ~/Developer/Experiments"
+alias pub="cd ~/Developer/Public"
+alias pri="cd ~/Developer/Private"
+alias learn="cd ~/Developer/Learning"
 
-# You may need to manually set your language environment
-export LANG=en_US.UTF-8
+alias extdev="cd /Volumes/X10\ Pro/Developer"
+alias extexp="cd /Volumes/X10\ Pro/Developer/Experiments"
+alias extpub="cd /Volumes/X10\ Pro/Developer/Public"
+alias extpri="cd /Volumes/X10\ Pro/Developer/Private"
+alias extlearn="cd /Volumes/X10\ Pro/Developer/Learning"
 
-export EDITOR=/opt/homebrew/bin/nvim
-
-alias la=tree
-alias cat=bat
-
-# Git
+# Git aliases
 alias gc="git commit -m"
 alias gca="git commit -a -m"
 alias gp="git push origin HEAD"
@@ -44,113 +74,72 @@ alias gcoall='git checkout -- .'
 alias gr='git remote'
 alias gre='git reset'
 
-# Docker
+# Docker aliases
 alias dco="docker compose"
 alias dps="docker ps"
 alias dpa="docker ps -a"
 alias dl="docker ps -l -q"
 alias dx="docker exec -it"
 
-# Dirs
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-alias ......="cd ../../../../.."
-
-# GO
-export GOPATH='/Users/omerxx/go'
-
-# VIM
-alias v="/Users/omerxx/.nix-profile/bin/nvim"
-
-# Nmap
-alias nm="nmap -sC -sV -oN nmap"
-
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/omer/.vimpkg/bin:${GOPATH}/bin:/Users/omerxx/.cargo/bin
-
-alias cl='clear'
-
-# K8S
-export KUBECONFIG=~/.kube/config
-alias k="kubectl"
-alias ka="kubectl apply -f"
-alias kg="kubectl get"
-alias kd="kubectl describe"
-alias kdel="kubectl delete"
-alias kl="kubectl logs"
-alias kgpo="kubectl get pod"
-alias kgd="kubectl get deployments"
-alias kc="kubectx"
-alias kns="kubens"
-alias kl="kubectl logs -f"
-alias ke="kubectl exec -it"
-alias kcns='kubectl config set-context --current --namespace'
-alias podname=''
-
-# HTTP requests with xh!
-alias http="xh"
-
-# VI Mode!!!
-bindkey jj vi-cmd-mode
-
-# Eza
+# Modern CLI tools
+alias ls="eza --icons=always"
 alias l="eza -l --icons --git -a"
 alias lt="eza --tree --level=2 --long --icons --git"
 alias ltree="eza --tree --level=2  --icons --git"
+alias cat=bat
+alias cl='clear'
 
-# SEC STUFF
-alias gobust='gobuster dir --wordlist ~/security/wordlists/diccnoext.txt --wildcard --url'
-alias dirsearch='python dirsearch.py -w db/dicc.txt -b -u'
-alias massdns='~/hacking/tools/massdns/bin/massdns -r ~/hacking/tools/massdns/lists/resolvers.txt -t A -o S bf-targets.txt -w livehosts.txt -s 4000'
-alias server='python -m http.server 4445'
-alias tunnel='ngrok http 4445'
-alias fuzz='ffuf -w ~/hacking/SecLists/content_discovery_all.txt -mc all -u'
-alias gr='~/go/src/github.com/tomnomnom/gf/gf'
-
-### FZF ###
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-export PATH=/opt/homebrew/bin:$PATH
-
-alias mat='osascript -e "tell application \"System Events\" to key code 126 using {command down}" && tmux neww "cmatrix"'
-
-# Nix!
-export NIX_CONF_DIR=$HOME/.config/nix
-export PATH=/run/current-system/sw/bin:$PATH
-
-function ranger {
-	local IFS=$'\t\n'
-	local tempfile="$(mktemp -t tmp.XXXXXX)"
-	local ranger_cmd=(
-		command
-		ranger
-		--cmd="map Q chain shell echo %d > "$tempfile"; quitall"
-	)
-
-	${ranger_cmd[@]} "$@"
-	if [[ -f "$tempfile" ]] && [[ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]]; then
-		cd -- "$(cat "$tempfile")" || return
-	fi
-	command rm -f -- "$tempfile" 2>/dev/null
-}
-alias rr='ranger'
-
-# navigation
+# Navigation helpers
 cx() { cd "$@" && l; }
 fcd() { cd "$(find . -type d -not -path '*/.*' | fzf)" && l; }
 f() { echo "$(find . -type f -not -path '*/.*' | fzf)" | pbcopy }
 fv() { nvim "$(find . -type f -not -path '*/.*' | fzf)" }
 
- # Nix
- if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-	 . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
- fi
- # End Nix
+# FZF configuration
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export XDG_CONFIG_HOME="/Users/omerxx/.config"
+# Path configurations
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.npm-global/bin:$PATH"
+export PATH="/Applications/SnowSQL.app/Contents/MacOS:$PATH"
 
+# pnpm
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
+# Perl configuration
+PATH="/Users/veronelazio/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/Users/veronelazio/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/veronelazio/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/veronelazio/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/veronelazio/perl5"; export PERL_MM_OPT;
+
+# Source additional configurations
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Starship prompt
+eval "$(starship init zsh)"
+export STARSHIP_CONFIG=~/.config/starship/starship.toml
+
+# Zoxide (better cd)
 eval "$(zoxide init zsh)"
+alias cd="z"
+
+# Additional shell enhancements
 eval "$(atuin init zsh)"
 eval "$(direnv hook zsh)"
+
+# Nushell aliases and functions
+alias nu='nushell'
+function nu-config() {
+    mkdir -p "$NUSHELL_CONFIG_DIR"
+    cp nushell/config.nu "$NUSHELL_CONFIG_DIR/config.nu"
+    cp nushell/env.nu "$NUSHELL_CONFIG_DIR/env.nu"
+    echo "Nushell configuration files copied to $NUSHELL_CONFIG_DIR"
+}
+
+# Custom application aliases
+alias brave-optimized='/Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser --process-per-site --disk-cache-size=104857600'
