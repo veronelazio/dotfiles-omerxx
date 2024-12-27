@@ -144,3 +144,6 @@ function nu-config() {
 
 # Custom application aliases
 alias brave-optimized='/Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser --process-per-site --disk-cache-size=104857600'
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+export GOBIN=$GOPATH/bin

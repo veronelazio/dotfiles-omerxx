@@ -5,4 +5,7 @@ require("obsidian").setup({
       path = "/Users/veronelazio/Obsidian/Notes",
     },
   },
+  ui = {
+    enable = false
+  }
 })
