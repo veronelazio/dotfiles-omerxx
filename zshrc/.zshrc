@@ -134,7 +134,7 @@ eval "$(atuin init zsh)"
 eval "$(direnv hook zsh)"
 
 # Nushell aliases and functions
-alias nu='nushell'
+alias nushell='nu'
 function nu-config() {
     mkdir -p "$NUSHELL_CONFIG_DIR"
     cp nushell/config.nu "$NUSHELL_CONFIG_DIR/config.nu"
