@@ -18,6 +18,7 @@ export LANG=en_US.UTF-8
 export EDITOR=/opt/homebrew/bin/nvim
 export VIMRUNTIME="/opt/homebrew/share/nvim/runtime"
 export XDG_CONFIG_HOME="/Users/veronelazio/.config"
+export NIX_CONF_DIR="/Users/veronelazio/.config/nix"
 
 # Nushell configuration
 export NUSHELL_CONFIG_DIR="$XDG_CONFIG_HOME/nushell"
@@ -122,7 +123,7 @@ source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 # Starship prompt
 eval "$(starship init zsh)"
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
+export STARSHIP_CONFIG="/Users/veronelazio/.config/starship/starship.toml"
 
 # Zoxide (better cd)
 eval "$(zoxide init zsh)"
